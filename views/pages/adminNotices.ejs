@@ -1,0 +1,155 @@
+<%- include('../partials/head.ejs') %>
+
+<body>
+    <% urlify = function urlify(text) {
+        var urlRegex = /(https?:\/\/[^\s]+)/g; 
+        var matches = [...text.matchAll(urlRegex)]; 
+        return matches; } 
+        urlify2 = function urlify2(text) {
+             var urlRegex = /(https?:\/\/[^\s]+)/g;
+             return text.replace(urlRegex, function(url) {
+                 return '<a target="_blank" class="link" href="' + url + '">' + url + '</a>';
+         })
+     }%>
+    <a href="/auth/logout" align="left" style="margin-left: 30px; margin-top: 10px; float: left;" class="btn btn-danger">Logout</a>
+     <p align="right" style="float: right; margin-right: 30px;" class="btn btn-success">Dhaka Medical College K-78</p>
+    <div class="container">
+        <% if(alertMsg.length>1) { %>
+        <div class="alert alert-success alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Success!</strong> <%= alertMsg %>
+        </div>
+        <% } %>
+        <div>
+            <button class="btn btn-outline-danger" style="float: right;">Acting As Admin</button>
+        </div>
+        <br>
+        <center>
+            <br><br><p class="mytext" style="width: 230px; margin: auto 0"><%= newCount.toString() %></p><br><br>
+        </center>
+    <center>
+        <div class="my-4">
+            <br><br>
+            <h4 style="margin-left: 30%; margin-right: 30%;">Create New Notice</h4>
+            <form action="/admin/notices" class="form-inline" method="POST">
+                <select name="batch" class="myinput">
+                    <% var batchOptions = ["Everyone", "Batch A", "Batch B", "Batch C", "Batch D", "Batch A1", "Batch A2", "Batch B1", "Batch B2", "Batch C1", "Batch C2", "Batch D1", "Batch D2", "Batch E1", "Batch E2", "Batch F1", "Batch F2"]; %>
+                    <% for(var i = 0; i < batchOptions.length; i++) { %>
+                      <option value='<%= batchOptions[i] %>'><%= batchOptions[i] %></option>
+                    <% } %>
+                </select>
+                <select name="subject" class="myinput">
+                    <% var subjectOptions = ["Anatomy", "Physiology", "Biochemistry", "General"]; %>
+                    <% for(var i = 0; i < subjectOptions.length; i++) { %>
+                      <option value='<%= subjectOptions[i] %>'><%= subjectOptions[i] %></option>
+                    <% } %>
+                </select>
+                <select name="type" class="myinput">
+                    <% var typeOptions = ["Lecture Class", "Tutorial Class", "Item", "Seminar", "Practical Class", "Form Fillup"]; %>
+                    <% for(var i = 0; i < typeOptions.length; i++) { %>
+                      <option value='<%= typeOptions[i] %>'><%= typeOptions[i] %></option>
+                    <% } %>
+                </select>
+                <select name="time" class="myinput">
+                    <% var timeOptions = ["8:30 AM", "10:00 AM", "11:30 AM", "1:30 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM","7:00 PM", "7:30 PM", "8:00 PM", "8:30 PM", "9:00 PM", "10:00 PM", "11:00 PM", "12:00 PM"]; %>
+                    <% for(var i = 0; i < timeOptions.length; i++) { %>
+                      <option value='<%= timeOptions[i] %>'><%= timeOptions[i] %></option>
+                    <% } %>
+                </select>
+        
+                <div class="from-group mr-3" style="position: relative; display: inline-block;">
+                  <br>  <textarea name="content" placeholder="Dear Admin, Please Fillup The Dropdown Boxes Above And Paste The Notice Here ... ... ..." class="myta" rows="5" cols="150"></textarea>
+                <input type="submit" class="btn btn-primary" style="position:absolute; bottom:20px; right:114px;" value="Submit">
+                </div>
+            </form>
+        </div>
+    </center>
+    <div>
+        
+        <% if(pins.length>0) {%>
+        <h3 class="mytext" style="width: 190px">Pinned Notices</h3><br><br>
+            <% let L = pins.length; for(let i=L-1 ;i>=0 ;i--) { let r = i+1; %>
+                <div class="mycontainer">
+                    &nbsp &nbsp &nbsp<p class="myinput"><%= pins[i].timestamp  %></p>
+
+                    <a href="/admin/notices/delete/<%= pins[i]._id %>" onclick="showbox(event)" class="btn btn-danger" style="float: right; margin-right: 15px; margin-top: 15px;">Delete Notice</a>
+                    
+
+                    <a href="/admin/notices/unpin/<%= pins[i]._id %>" class="btn btn-secondary" style="float: right; margin-right: 15px; margin-top: 15px;">Unpin Notice</a>
+                
+                    <center>
+                    <div>
+                        <% if(urlify(pins[i].content).length>0) { %>
+                        
+                            <% if(pins[i].type == "Form Fillup") { %>
+
+                                <br><a target="_blank" class="a" href="<%= urlify(pins[i].content)[0][0] %>"><%- "<font color='yellow'>" + pins[i].batch + "</font> Please Fillup This Form By " + pins[i].time   %></a><br>
+                            <% } else{ %> 
+
+                            <br><a target="_blank" class="a" href="<%= urlify(pins[i].content)[0][0] %>"><%- "<font color='yellow'>" + pins[i].batch + "</font> Please Join " +  "<font color='aqua'>" + pins[i].subject + " " + pins[i].type +  "</font> " + " at " + pins[i].time %></a><br>
+                            <% } %> 
+                        
+                    <br><div class="mytext" style="text-align: left;"> <%- urlify2(pins[i].content).replace(/(?:\r\n|\r|\n)/g, '<br>') %> </div><br>
+                    <br>
+
+                        <% } else { %> 
+                    <br><div class="mytext" style="text-align: left;"> <%- urlify2(pins[i].content.replace(/(?:\r\n|\r|\n)/g, '<br>')) %> </div><br>
+                    <br>
+                    <% } %>
+                    </div>
+                </center>
+                </div>
+            <% } %>
+    </div>
+    <% } %>
+        <div>
+            <br><br>
+            <h3 class="mytext" style="width: 190px">Recent Notices</h3><br><br>
+                <% let L = notices.length; for(let i=0 ;i<L ;i++) { let r = i+1; %>
+                    <div class="mycontainer">
+                        &nbsp &nbsp &nbsp<p class="myinput"><%= notices[i].timestamp  %></p>
+                        
+                        <a href="/admin/notices/delete/<%= notices[i]._id %>" onclick="showbox(event)" class="btn btn-danger" style="float: right; margin-right: 15px; margin-top: 15px;">Delete Notice</a>
+                        
+
+                        <a href="/admin/notices/pin/<%= notices[i]._id %>"" class="btn btn-success" style="float: right; margin-right: 15px; margin-top: 15px;">Pin Notice</a>
+
+                        
+                        <center>
+                        <div>
+                            <% if(urlify(notices[i].content).length>0) { %>
+                        
+                            <% if(notices[i].type == "Form Fillup") { %>
+
+                                <br><a target="_blank" class="a" href="<%= urlify(notices[i].content)[0][0] %>"><%- "<font color='yellow'>" + notices[i].batch + "</font> Please Fillup This Form By " + notices[i].time   %></a><br>
+                            <% } else{ %> 
+
+                            <br><a target="_blank" class="a" href="<%= urlify(notices[i].content)[0][0] %>"><%- "<font color='yellow'>" + notices[i].batch + "</font> Please Join " +  "<font color='aqua'>" + notices[i].subject + " " + notices[i].type +  "</font> " + " at " + notices[i].time %></a><br>
+                            <% } %> 
+                        <br><p class="mytext" style="text-align: left;"> <%- urlify2(notices[i].content).replace(/(?:\r\n|\r|\n)/g, '<br>') %> </p><br>
+                        <br>
+                        <% } else { %> 
+                        <br><p class="mytext" style="text-align: left;"> <%- urlify2(notices[i].content).replace(/(?:\r\n|\r|\n)/g, '<br>') %> </p><br>
+                        <br>
+                        <% } %>
+                        </div>
+                    </center>
+                    </div>
+                <% } %>
+        </div>
+        <br>
+    </div>
+    <br>
+    <script>
+        if ( window.history.replaceState ) {
+          window.history.replaceState( null, null, window.location.href );
+        }
+        function showbox(e){
+            if(!confirm('Are You Sure You Want to Delete The Notice ?')){
+                e.preventDefault();
+            }
+        }
+    </script>
+    <%- include('../partials/footer.ejs') %>
+  </body>
+</html>

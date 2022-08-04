@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Contact EJS App</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <%- include('./styles/styles.ejs'); %>
+  </head>
+  <body>
+
+    <div class="texts">hello
+    </div><br><br>
+
+    <div class="container">
+        <div class="my-4">
+            <h4>Home Automation System</h4><br>
+            <form action="/news" class="form-inline" method="GET">
+                <div class="from-group mr-3">
+                    <input type="text" name="topic" placeholder="News Topic" class="form-control">
+                </div>
+                <div class="from-group mr-3">
+                    <input type="text" name="country" placeholder="Country" class="form-control">
+                </div>
+                <div class="from-group mr-3">
+                    <input type="text" name="lang" placeholder="Language" class="form-control">
+                </div>
+                <div class="from-group mr-3">
+                    <input type="hidden" name="id">
+                </div>
+                <input type="submit" class="btn btn-primary" value="submit">
+            </form>
+        </div>
+        <br>
+        <h4>Personalized News Feed on <%= topic %></h4><br>
+        
+    </div>
+
+
+
+    <% let L = titles.length; for(let i=1 ;i<L ;i++) {  %>
+      <div class="mycontainer">
+  
+          <center>
+          <div>
+            <br><a target="_blank" class="a" href="<%= links[i] %>"><%- "<font color='yellow'>" + titles[i]  %></a>
+            
+            <br><p class="mytext" style="text-align: left;"> <%= descriptions[i] %> </p><br>
+              <br>
+          </div>
+      </center>
+      </div>
+  <% } %>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+      const texts = document.querySelector('.texts');
+
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+const recognition = new SpeechRecognition();
+recognition.interimResults = true;
+
+let p = document.createElement('p');
+
+recognition.addEventListener('result', (e)=>{
+  texts.appendChild(p);
+  const text = Array.from(e.results)
+    .map(result => result[0])
+    .map(result => result.transcript)
+    .join('');
+
+  p.innerText = text;
+  if(e.results[0].isFinal){
+    if (text.includes('how are you')) {
+      p = document.createElement('p');
+      p.classList.add('replay');
+      p.innerText = 'I am fine';
+      texts.appendChild(p)
+    }
+    if (text.includes("what's your name") || text.includes('what is your name')) {
+      p = document.createElement('p');
+      p.classList.add('replay');
+      p.innerText = 'My Name is Cifar';
+      texts.appendChild(p)
+    }
+    if (text.includes('open my YouTube')) {
+      p = document.createElement('p');
+      p.classList.add('replay');
+      p.innerText = 'opening youtube channel';
+      texts.appendChild(p)
+      console.log('opening youtube')
+      window.open('https://www.youtube.com/channel/UCdxaLo9ALJgXgOUDURRPGiQ')
+    }
+    p = document.createElement('p');
+  }
+});
+
+
+recognition.addEventListener('end', ()=>{
+  recognition.start();
+})
+
+recognition.start();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

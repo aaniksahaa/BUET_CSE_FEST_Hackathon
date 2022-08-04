@@ -1,0 +1,23 @@
+{
+  "name": "ejs-contact-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "browserify-fs": "^1.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "https": "^1.0.0",
+    "mongoose": "^5.13.7",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.1.0",
+    "request": "^2.88.2"
+  }
+}
